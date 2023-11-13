@@ -10,11 +10,10 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../connector" />
+          <root url="jar://$MODULE_DIR$/../../connector/mysql-connector-j-8.2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../connector" recursive="false" />
       </library>
     </orderEntry>
   </component>
