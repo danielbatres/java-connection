@@ -1,17 +1,24 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.sql.*;
+import java.sql.DriverManager;
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Intro with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Connection myConnection = null;
+        Statement myStatement = null;
+        ResultSet myResult = null;
 
-        // Press Mayús+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        try {
+            myConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "toor");
+            System.out.println("Connected");
 
-            // Press Mayús+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+            myStatement = myConnection.createStatement();
+            myResult = myStatement.executeQuery("SELECT * FROM employees");
+
+            while (myResult.next()) {
+                System.out.println(myResult.getString("first_name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
