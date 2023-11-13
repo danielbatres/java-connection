@@ -1,20 +1,13 @@
 package org.example.platzi.main;
 
-import org.example.platzi.util.DatabaseConnection;
-
-import java.sql.*;
+import org.example.platzi.model.Employee;
+import org.example.platzi.repository.EmployeeRepository;
+import org.example.platzi.repository.Repository;
 
 public class Main {
     public static void main(String[] args) {
-        try (Connection myConnection = DatabaseConnection.getInstance();
-            Statement myStatement = myConnection.createStatement();
-            ResultSet myResult = myStatement.executeQuery("SELECT * FROM employees");) {
+        Repository<Employee> repository = new EmployeeRepository();
 
-            while (myResult.next()) {
-                System.out.println(myResult.getString("first_name"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        repository.findAll().forEach(System.out::println);
     }
 }
