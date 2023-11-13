@@ -4,18 +4,22 @@ import java.sql.DriverManager;
 public class Main {
     public static void main(String[] args) {
         Connection myConnection = null;
-        Statement myStatement = null;
-        ResultSet myResult = null;
+        PreparedStatement myStatement = null;
 
         try {
             myConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "toor");
             System.out.println("Connected");
 
-            myStatement = myConnection.createStatement();
-            myResult = myStatement.executeQuery("SELECT * FROM employees");
+            String sql = "INSERT INTO employees (first_name, pa_surname) VALUES (?, ?)";
 
-            while (myResult.next()) {
-                System.out.println(myResult.getString("first_name"));
+            myStatement = myConnection.prepareStatement(sql);
+            myStatement.setString(1, "Johana");
+            myStatement.setString(2, "Dorantes");
+
+            int rowsAffected = myStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("new employee created");
             }
         } catch (Exception e) {
             e.printStackTrace();
