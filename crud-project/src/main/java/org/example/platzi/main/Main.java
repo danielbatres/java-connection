@@ -1,18 +1,14 @@
 package org.example.platzi.main;
 
+import org.example.platzi.util.DatabaseConnection;
+
 import java.sql.*;
 
 public class Main {
     public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:3306/project";
-        String user = "root";
-        String password = "toor";
-
-        try (
-            Connection myConnection = DriverManager.getConnection(url, user, password);
+        try (Connection myConnection = DatabaseConnection.getInstance();
             Statement myStatement = myConnection.createStatement();
-            ResultSet myResult = myStatement.executeQuery("SELECT * FROM employees");
-            ) {
+            ResultSet myResult = myStatement.executeQuery("SELECT * FROM employees");) {
 
             while (myResult.next()) {
                 System.out.println(myResult.getString("first_name"));
