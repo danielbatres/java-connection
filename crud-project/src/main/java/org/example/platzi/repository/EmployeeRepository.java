@@ -50,8 +50,21 @@ public class EmployeeRepository implements Repository<Employee> {
     }
 
     @Override
-    public void save(Employee type) {
+    public void save(Employee employee) {
+        String sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)";
 
+        try (
+            PreparedStatement myStatement = getConnection().prepareStatement(sql);) {
+            myStatement.setString(1, employee.getFirstName());
+            myStatement.setString(2, employee.getPaSurname());
+            myStatement.setString(3, employee.getMaSurname());
+            myStatement.setString(4, employee.getEmail());
+            myStatement.setFloat(5, employee.getSalary());
+
+            myStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Something went wrong");
+        }
     }
 
     @Override
