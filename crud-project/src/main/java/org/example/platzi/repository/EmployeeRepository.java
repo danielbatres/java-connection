@@ -1,7 +1,6 @@
 package org.example.platzi.repository;
 
 import org.example.platzi.model.Employee;
-import org.example.platzi.util.DatabaseConnection;
 
 import java.sql.*;
 import java.sql.SQLException;
@@ -9,15 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeRepository implements Repository<Employee> {
-    private Connection getConnection() throws SQLException {
-        return DatabaseConnection.getInstance();
+    private Connection myConnection;
+
+    public EmployeeRepository(Connection myConnection) {
+        this.myConnection = myConnection;
     }
 
     @Override
     public List<Employee> findAll() {
         List<Employee> employees = new ArrayList<>();
 
-        try (Statement myStatement = getConnection().createStatement();
+        try (Statement myStatement = myConnection.createStatement();
             ResultSet myResult = myStatement.executeQuery("SELECT * FROM employees")) {
             while (myResult.next()) {
                 employees.add(createEmployee(myResult));
@@ -34,7 +35,7 @@ public class EmployeeRepository implements Repository<Employee> {
         Employee employee = null;
         String sql = "SELECT * FROM employees WHERE id = ?";
 
-        try (PreparedStatement myStatement = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement myStatement = myConnection.prepareStatement(sql)) {
             myStatement.setInt(1, id);
 
             try (ResultSet myResult = myStatement.executeQuery()) {
@@ -51,15 +52,16 @@ public class EmployeeRepository implements Repository<Employee> {
 
     @Override
     public void save(Employee employee) {
-        String sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary, curp) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (
-            PreparedStatement myStatement = getConnection().prepareStatement(sql);) {
+            PreparedStatement myStatement = myConnection.prepareStatement(sql);) {
             myStatement.setString(1, employee.getFirstName());
             myStatement.setString(2, employee.getPaSurname());
             myStatement.setString(3, employee.getMaSurname());
             myStatement.setString(4, employee.getEmail());
             myStatement.setFloat(5, employee.getSalary());
+            myStatement.setString(6, employee.getCurp());
 
             myStatement.executeUpdate();
         } catch (SQLException e) {
@@ -69,7 +71,7 @@ public class EmployeeRepository implements Repository<Employee> {
 
     @Override
     public void delete(Integer id) {
-        try (PreparedStatement myStatement = getConnection().prepareStatement("DELETE FROM employees WHERE id = ?")){
+        try (PreparedStatement myStatement = myConnection.prepareStatement("DELETE FROM employees WHERE id = ?")){
             myStatement.setInt(1, id);
 
             myStatement.executeUpdate();
@@ -86,6 +88,7 @@ public class EmployeeRepository implements Repository<Employee> {
         employee.setMaSurname(myResult.getString("ma_surname"));
         employee.setEmail(myResult.getString("email"));
         employee.setSalary(myResult.getFloat("salary"));
+        employee.setCurp(myResult.getString("curp"));
 
         return employee;
     }

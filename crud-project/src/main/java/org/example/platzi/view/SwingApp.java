@@ -3,9 +3,11 @@ package org.example.platzi.view;
 import org.example.platzi.model.Employee;
 import org.example.platzi.repository.EmployeeRepository;
 import org.example.platzi.repository.Repository;
+import org.example.platzi.util.DatabaseConnection;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
@@ -52,7 +54,7 @@ public class SwingApp extends JFrame {
         deleteButton.setFocusPainted(false);
 
         // Create the Repository object to access the database
-        employeeRepository = new EmployeeRepository();
+        employeeRepository = new EmployeeRepository(DatabaseConnection.getInstance());
 
         // Load initial employees into the table
         refreshEmployeeTable();
