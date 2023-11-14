@@ -1,22 +1,36 @@
 package org.example.platzi.util;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.*;
 
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/project";
     private static final String USER = "root";
     private static final String PASSWORD = "toor";
-    private static Connection myConnection;
+    private static BasicDataSource pool;
 
-    public static Connection getInstance() {
-        if (myConnection == null) {
+    public static BasicDataSource getInstance() {
+        if (pool == null) {
             try {
-                myConnection = DriverManager.getConnection(URL, USER, PASSWORD);
-            } catch (SQLException e) {
+                pool = new BasicDataSource();
+                pool.setUrl(URL);
+                pool.setUsername(USER);
+                pool.setPassword(PASSWORD);
+
+                pool.setInitialSize(3);
+                pool.setMinIdle(2);
+                pool.setMaxIdle(10);
+                pool.setMaxTotal(10);
+            } catch (Exception e) {
                 System.out.println("Connection failed");
             }
         }
 
-        return myConnection;
+        return pool;
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return getInstance().getConnection();
     }
 }
